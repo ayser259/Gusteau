@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Building
+from .models import *
 from .serializers import BuildingSerializer
+from django.http import HttpResponse
+from .data_gen import *
 
 
 from django.shortcuts import render
@@ -27,3 +29,9 @@ def get_buildings(request):
     # update details of a single location
     elif request.method == 'PUT':
         return Response({})
+
+def data_gen(request):
+    print("Hello")
+    deta_generator()
+
+    return HttpResponse("Data Genetation Method Ran")
