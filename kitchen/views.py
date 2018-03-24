@@ -31,7 +31,5 @@ def get_buildings(request):
         return Response({})
 
 def data_gen(request):
-    print("Hello")
     deta_generator()
-
     return HttpResponse("Data Genetation Method Ran")

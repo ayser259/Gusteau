@@ -32,7 +32,6 @@ def deta_generator():
     uw_driver = UW_Driver()
     uw_driver.foodservices_diets()
     # plan tier 1: building, locsation, locationHours
-
     a = uw_driver.foodservices_locations()
     for item in a:
         try:
@@ -100,6 +99,8 @@ def deta_generator():
         student = Student()
         student.user = user
         student.save()
+        student.student_id = int("20600"+str(student.student_id))
+        student.save()
 
     location_set = Location.objects.all()
     student_set = Student.objects.all()
@@ -135,7 +136,7 @@ def deta_generator():
     diet_type.save()
 
     # Tier 3 Create Food, FoodItemToLocation,MenuCalendar, Review, Feedback
-    for i in range(0,100):
+    for i in range(0,1000):
         menu = uw_driver.foodservices_products(i)
         if len(menu)>0:
             food = Food()
@@ -151,14 +152,14 @@ def deta_generator():
             food.carbs =(menu['carbo_g'])
             food.carbs_percent =(menu['carbo_percent'])
             food.protein =(menu['protein_g'])
+            y = randint(15,85)
+            food.protein_percent = y
             food.diet_type=DietType.objects.get(diet_type=menu['diet_type'])
             food.average_rating = randint(0,5)
             food.save()
 
     location_set = Location.objects.all()
     food_set = Food.objects.all()
-    print("BBBBB")
-    print(len(food_set))
 
     for item in location_set:
         x = randint(2,10)
@@ -179,8 +180,8 @@ def deta_generator():
             except:
                 print("Tossed an Error")
 
-    future_dates_available = ['2018-04-01','2018-04-02','2018-04-03','2018-04-04','2018-04-05','2018-04-06','2018-04-07','2018-04-08','2018-04-09','2018-04-10','2018-04-11','2018-04-12','2018-04-13','2018-04-14']
-    past_dates_available = ['2018-03-01','2018-03-02','2018-03-03','2018-03-04','2018-03-05','2018-03-06','2018-03-07','2018-03-08','2018-03-09','2018-03-10','2018-03-11','2018-03-12','2018-03-13','2018-03-14']
+    future_dates_available = ['2018-04-02','2018-04-03','2018-04-04','2018-04-05','2018-04-06','2018-04-07','2018-04-08','2018-04-09','2018-04-10','2018-04-11','2018-04-12','2018-04-13','2018-04-14']
+    past_dates_available = ['2018-03-09','2018-03-10','2018-03-11','2018-03-12','2018-03-13','2018-03-14','2018-03-15','2018-03-16','2018-03-17','2018-03-18','2018-03-19','2018-03-20','2018-03-21','2018-03-22','2018-03-23','2018-03-24','2018-03-25','2018-03-26','2018-03-27','2018-03-28','2018-03-29','2018-03-30','2018-04-01']
     geo_food_set = FoodItemToLocation.objects.all()
     for item in geo_food_set:
         for i in range(1,5):
@@ -202,6 +203,7 @@ def deta_generator():
     lorem = "Lorem ipsum dolor sit amet, probo sanctus ius ad, ei inani latine gubergren eum. Sumo fugit conceptam ad est, partem interpretaris at cum. Eos corpora vituperata ea, qui cu utroque eloquentiam. Cibo porro efficiendi eu nam, te fabellas philosophia qui."
 
     calendar_set = MenuCalendar.objects.all()
+
     for i in range(0,100):
         review = Review()
         y = randint(0,len(past_dates_available)-1)
@@ -222,3 +224,32 @@ def deta_generator():
         y = randint(0,len(location_set)-1)
         feedback.location = location_set[y]
         feedback.save()
+
+    student_set = Student.objects.all()
+    location_set = Location.objects.all()
+
+    for student in student_set:
+        loc_list = []
+        for i in range(0,4):
+            fav_location = FavoriteLocation()
+            fav_location.student =  student
+            y = randint(0,len(location_set)-1)
+            while y in loc_list:
+                y=y+1
+                if y>=len(location_set):
+                    y = int(y/2)
+            fav_location.location = location_set[y]
+            loc_list.append(y)
+            fav_location.save()
+'''
+    user_set = User.objects.all()
+    building_set = Building.objects.all()
+    user_set.delete()
+    building_set.delete()
+    login_set = Login.objects.all()
+    login_set.delete()
+    diets= DietType.objects.all()
+    diets.delete()
+    food_set = Food.objects.all()
+    food_set.delete()
+'''

@@ -93,33 +93,29 @@ class DietType(models.Model):
         return str(self.diet_type_id)+" "+str(self.diet_type)
 
 class Food(models.Model):
+    # Nutritional Information and Product Information about Food Items
 
     food_id = models.AutoField(primary_key= True)
     product_id = models.IntegerField(null=True)
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=250)
     cal = models.IntegerField(null=True)
-    weight = models.CharField(max_length=40)
+    weight = models.CharField(max_length=2500)
     diet_type = models.ForeignKey(DietType,on_delete=models.CASCADE)
     average_rating = models.FloatField(null=True)
 
     fat = models.IntegerField(null=True)
-    fat_content = models.IntegerField(null=True)
     fat_percent = models.IntegerField(null=True)
 
     sat_fat = models.IntegerField(null=True)
-    sat_fat_content = models.IntegerField(null=True)
     sat_fat_percent = models.IntegerField(null=True)
 
     carbs = models.IntegerField(null=True)
-    carbs_content = models.IntegerField(null=True)
     carbs_percent = models.IntegerField(null=True)
 
     sodium = models.IntegerField(null=True)
-    sodium_content = models.IntegerField(null=True)
     sodium_percent = models.IntegerField(null=True)
 
     protein = models.IntegerField(null=True)
-    protein_content = models.IntegerField(null=True)
     protein_percent = models.IntegerField(null=True)
 
 
@@ -127,6 +123,7 @@ class Food(models.Model):
         return str(self.food_id)+" "+str(self.name)+" " + str(self.cal)
 
 class FoodItemToLocation(models.Model):
+    # Relationship of locations where different food items are available
 
     food_item_to_location_id = models.AutoField(primary_key=True)
     food = models.ForeignKey(Food,on_delete=models.CASCADE)
@@ -137,6 +134,7 @@ class FoodItemToLocation(models.Model):
 
 
 class MenuCalendar(models.Model):
+    # Relationship Showing where and when different food items are available
 
     menu_calendar_id = models.AutoField(primary_key=True)
     food_item_to_location = models.ForeignKey(FoodItemToLocation,on_delete=models.CASCADE)
@@ -145,8 +143,8 @@ class MenuCalendar(models.Model):
     def __str__(self):
         return str(self.menu_calendar_id)+" "+str(self.food_item_to_location.location.name)+" "+str(self.data_available)
 
-
 class Review(models.Model):
+    # Review information about different food items, by a user at a location
 
     review_id = models.AutoField(primary_key=True)
     star_rating = models.FloatField()
@@ -159,6 +157,7 @@ class Review(models.Model):
 
 
 class Feedback(models.Model):
+    # Feedback tailored for individual locations writen by a user
 
     feedback_id = models.AutoField(primary_key=True)
     text = models.TextField(blank=True)
@@ -167,3 +166,12 @@ class Feedback(models.Model):
 
     def __str__(self):
         return str(self.feedback_id)+ " "+ str(self.user.user_id)+" "+str(self.location.name)
+
+class FavoriteLocation(models.Model):
+    # Relationship of different food locations to USers
+    favorite_location_id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(Student,on_delete=models.CASCADE)
+    location = models.ForeignKey(Location,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.favorite_location_id)+ " "+str(self.student.user.first_name)+" "+str(self.location.name)
