@@ -7,6 +7,7 @@ from .models import *
 from .serializers import *
 from django.http import HttpResponse
 from .data_gen import *
+import requests
 
 from django.shortcuts import render
 
@@ -361,18 +362,47 @@ def get_location_hours_for_location(request,location_id):
     elif request.method == 'PUT':
         return Response({})
 
+@api_view(['GET'])
+def get_food_by_location(request,location_id):
+    try:
+        locations_set = FoodItemToLocation.objects.filter(location=Location.objects.get(location_id=location_id))
+        serializer = FoodItemToLocationSerializer(locations_set, many=True)
+    except FoodItemToLocationSerializer.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # get details of a single location
+    if request.method == 'GET':
+        return Response(serializer.data)
+    # delete a single location
+    elif request.method == 'DELETE':
+        return Response({})
+    # update details of a single location
+    elif request.method == 'PUT':
+        return Response({})
+
 
 @api_view(['POST'])
 def submit_review(request):
     if request.method == 'POST':
-        post_dict = request.post_dict
-        print(post_dict)
-        try:
-            review = Review()
-            review.star_rating = post_dict['stat_rating']
-            review.text = post_dict['review_text']
-            review.user = User.objects.get(user_id=int(post_dict['review_user_id']))
-            review.item = Food.objects.get(food_id = int(post_dict['review_food_id']))
-            review.save()
-        except:
-            print("ERROR WITH REVIEW SUBMISSION")
+        print(request.data)
+        print(type(request.data))
+        post_dict = request.data
+        print(post_dict['star_rating'])
+
+        review = Review()
+        review.star_rating = post_dict['star_rating']
+        review.text = post_dict['review_text']
+        review.user = User.objects.get(user_id=int(post_dict['review_user_id']))
+        review.item = Food.objects.get(food_id =(post_dict['review_food_id']))
+        review.save()
+
+@api_view(['POST'])
+def add_fav_location_for_student(request):
+    if request.method == 'POST':
+        print(request.data)
+        print(type(request.data))
+        post_dict = request.data
+        fav_location = FavoriteLocation()
+        fav_location.student = Student.objects.get(student_id=int(post_dict['student_id']))
+        fav_location.location = Location.objects.get(location_id=int(post_dict['location_id']))
+        fav_location.save()

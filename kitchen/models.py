@@ -138,7 +138,7 @@ class MenuCalendar(models.Model):
 
     menu_calendar_id = models.AutoField(primary_key=True)
     food_item_to_location = models.ForeignKey(FoodItemToLocation,on_delete=models.CASCADE)
-    date_available = models.DateField()
+    date_available = models.CharField(max_length=25)
 
     def __str__(self):
         return str(self.menu_calendar_id)+" "+str(self.food_item_to_location.location.name)+" "+str(self.data_available)
@@ -150,10 +150,10 @@ class Review(models.Model):
     star_rating = models.FloatField()
     text = models.TextField(blank=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    item = models.ForeignKey(MenuCalendar,on_delete=models.CASCADE)
+    item = models.ForeignKey(Food,on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.review_id)+ " "+ str(self.user.user_id)+" "+str(self.star_rating)
+        return str(self.review_id)+ " "+ str(self.user.user_id)+" "+str(self.star_rating)+" "+str(self.item.name)+" "+str(self.text)
 
 
 class Feedback(models.Model):

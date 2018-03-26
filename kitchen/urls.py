@@ -28,10 +28,20 @@ urlpatterns = [
         views.get_location_hours_for_location,
         name='get_location_hours_for_location'
     ),
+        url(
+            r'^api/v1/kitchen/foodloc/(?P<location_id>[0-9]+)/$',
+            views.get_food_by_location,
+            name='get_food_by_location'
+        ),
     url(
         r'^api/v1/kitchen/submit_review',
         views.submit_review,
         name='submit_review'
+    ),
+    url(
+        r'^api/v1/kitchen/add_fav_location_for_student',
+        views.add_fav_location_for_student,
+        name='add_fav_location_for_student'
     ),
     url(
         r'^api/v1/kitchen/buildings',
