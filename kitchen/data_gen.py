@@ -1,4 +1,3 @@
-# coding=utf-8
 from __future__ import unicode_literals
 
 import requests, datetime, json,requests,sys, random,os,django
@@ -16,7 +15,7 @@ from rest_framework import status
 '''
 def deta_generator():
     try:
-
+        '''
         user_set = User.objects.all()
         building_set = Building.objects.all()
         user_set.delete()
@@ -27,7 +26,7 @@ def deta_generator():
         diets.delete()
         food_set = Food.objects.all()
         food_set.delete()
-
+        '''
     except:
         q =1
     os.environ['UW_API_KEY'] = '2cdafc74c7a20fcec6c0d766947f4919'
@@ -36,8 +35,9 @@ def deta_generator():
     uw_driver.foodservices_diets()
     # plan tier 1: building, locsation, locationHours
     a = uw_driver.foodservices_locations()
-
+    #'''
     for item in a:
+        print(item)
         try:
             current_bulding = Building.objects.get(name = item['building'])
         except:
@@ -58,10 +58,12 @@ def deta_generator():
                 new_building.street_name = 'University Avenue West'
                 new_building.postal_code = 'N2L 3G1'
                 new_building.save()
+    #'''
 
     for item in a:
         new_location = Location()
         new_location.name = item['outlet_name']
+        print(item['building'])
         if item['building'] == 'None' or item['building'] == None:
             new_location.building = None
         else:
@@ -69,6 +71,7 @@ def deta_generator():
         new_location.save()
 
         times = item['opening_hours']
+        print(times)
         time_keys = list(times.keys())
         for day in time_keys:
             hour_dict = times[day]
@@ -76,13 +79,13 @@ def deta_generator():
             location_hours.location = new_location
             location_hours.day_of_week = day
             try:
-                location_hours.opening_hour = datetime.datetime.strptime(hour_dict['opening_hour'], '%H:%M')
+                location_hours.opening_hour = datetime.datetime.strptime(hour_dict['opening_hour'], '%I:%M')
             except:
                 location_hours.opening_hour = None
-            if str(hour_dict['closing_hour']) == "None":
-                x = 2
-            else:
-                location_hours.closing_hour = datetime.datetime.strptime((hour_dict['closing_hour']), '%H:%M')
+            try:
+                location_hours.closing_hour = datetime.datetime.strptime(hour_dict['closing_hour'], '%I:%M')
+            except:
+                location_hours.closing_hour = None
             location_hours.save()
 
     # Tier 2 Create Valid User Data:
@@ -92,7 +95,7 @@ def deta_generator():
 
     x = randint(0, len(first_names)-1)
     y = randint(0,len(last_names)-1)
-
+    #'''
     for i in range(0,100):
         x = randint(0, len(first_names)-1)
         y = randint(0,len(last_names)-1)
@@ -120,10 +123,12 @@ def deta_generator():
 
     location_set = Location.objects.all()
     student_set = Student.objects.all()
+    print("AAAA")
+    print(len(location_set))
 
     for location in location_set:
-        print(len(student_set))
         z = randint(0,(len(student_set)-1))
+
         student = student_set[z]
         user = student.user
         admin_user = AdminUser()
@@ -132,7 +137,7 @@ def deta_generator():
         admin_user.save()
         student.delete()
         student_set = Student.objects.all()
-
+    #'''
     diet_type = DietType()
     diet_type.diet_type = "Non Vegetarian"
     diet_type.save()
@@ -157,11 +162,10 @@ def deta_generator():
             if len(menu)>0:
                 food = Food()
                 food.product_id = (menu['product_id'])
-                food.cal = menu['calories']
                 food.name = menu['product_name']
                 food.weight = menu['serving_size']
+                food.weight = menu['calories']
                 food.fat = (menu['total_fat_g'])
-                food.fat_percent = menu['total_fat_percent']
                 food.sat_fat =(menu['fat_saturated_g'])
                 food.sat_fat_percent =(menu['fat_saturated_percent'])
                 food.sodium =(menu['sodium_mg'])
@@ -174,38 +178,30 @@ def deta_generator():
                 food.diet_type=DietType.objects.get(diet_type=menu['diet_type'])
                 food.average_rating = randint(0,5)
                 food.save()
-                print(45)
         except:
             x = 1
-            print("Tossed Error 1")
-    print("Alpha")
+
     location_set = Location.objects.all()
     food_set = Food.objects.all()
-    print('food_set')
-    print(len(location_set))
 
     for item in location_set:
         x = randint(2,10)
-        print("1")
+        food_list = []
         food_list = []
         for i in range(0,x):
-            print("2")
             relation = FoodItemToLocation()
             relation.location = item
             y = randint(0,len(food_set)-1)
             while y in food_list:
-                print("3")
                 y = y+1
                 if y >= len(food_set):
                     y = y/2
             food_list.append(y)
             try:
-                print("4")
                 relation.food = food_set[y]
                 relation.save()
-                print("5")
             except:
-                print("Tossed an Error 2")
+                print("Tossed an Error")
 
     future_dates_available = ['2018-04-02','2018-04-03','2018-04-04','2018-04-05','2018-04-06','2018-04-07','2018-04-08','2018-04-09','2018-04-10','2018-04-11','2018-04-12','2018-04-13','2018-04-14']
     past_dates_available = ['2018-03-09','2018-03-10','2018-03-11','2018-03-12','2018-03-13','2018-03-14','2018-03-15','2018-03-16','2018-03-17','2018-03-18','2018-03-19','2018-03-20','2018-03-21','2018-03-22','2018-03-23','2018-03-24','2018-03-25','2018-03-26','2018-03-27','2018-03-28','2018-03-29','2018-03-30','2018-04-01']
@@ -226,9 +222,7 @@ def deta_generator():
                 calendar.data_available = future_dates_available[y]
                 calendar.save()
             except:
-                print("Tossed an error 3")
-
-    print(calendar_set)
+                print("Tossed an error")
 
     lorem = "Lorem ipsum dolor sit amet, probo sanctus ius ad, ei inani latine gubergren eum. Sumo fugit conceptam ad est, partem interpretaris at cum. Eos corpora vituperata ea, qui cu utroque eloquentiam. Cibo porro efficiendi eu nam, te fabellas philosophia qui."
 
@@ -271,3 +265,15 @@ def deta_generator():
             fav_location.location = location_set[y]
             loc_list.append(y)
             fav_location.save()
+'''
+    user_set = User.objects.all()
+    building_set = Building.objects.all()
+    user_set.delete()
+    building_set.delete()
+    login_set = Login.objects.all()
+    login_set.delete()
+    diets= DietType.objects.all()
+    diets.delete()
+    food_set = Food.objects.all()
+    food_set.delete()
+'''
