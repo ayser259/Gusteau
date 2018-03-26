@@ -1,3 +1,4 @@
+# coding=utf-8
 from __future__ import unicode_literals
 
 import requests, datetime, json,requests,sys, random,os,django
@@ -15,7 +16,7 @@ from rest_framework import status
 '''
 def deta_generator():
     try:
-        '''
+
         user_set = User.objects.all()
         building_set = Building.objects.all()
         user_set.delete()
@@ -26,7 +27,7 @@ def deta_generator():
         diets.delete()
         food_set = Food.objects.all()
         food_set.delete()
-        '''
+
     except:
         q =1
     os.environ['UW_API_KEY'] = '2cdafc74c7a20fcec6c0d766947f4919'
@@ -35,9 +36,8 @@ def deta_generator():
     uw_driver.foodservices_diets()
     # plan tier 1: building, locsation, locationHours
     a = uw_driver.foodservices_locations()
-    '''
+
     for item in a:
-        print(item)
         try:
             current_bulding = Building.objects.get(name = item['building'])
         except:
@@ -58,7 +58,7 @@ def deta_generator():
                 new_building.street_name = 'University Avenue West'
                 new_building.postal_code = 'N2L 3G1'
                 new_building.save()
-    '''
+
 
     for item in a:
         new_location = Location()
@@ -76,22 +76,16 @@ def deta_generator():
             location_hours = LocationHours()
             location_hours.location = new_location
             location_hours.day_of_week = day
-            print(hour_dict)
             try:
-                location_hours.opening_hour = datetime.datetime.strptime(hour_dict['opening_hour'], '%I:%M')
-                print("OPENING HOUR")
+                location_hours.opening_hour = datetime.datetime.strptime(hour_dict['opening_hour'], '%H:%M')
             except:
                 location_hours.opening_hour = None
-                print("NO OPENING HOUR")
-            print("OK")
-            try:
-                location_hours.closing_hour = datetime.datetime.strptime(str(hour_dict['closing_hour']), '%I:%M')
-                print(location_hours.closing_hour)
-                print("Closing Hour")
-            except:
-                #location_hours.closing_hour = None
-                #print("WTF")
+            if str(hour_dict['closing_hour']) == "None":
+                x = 2
+            else:
+                location_hours.closing_hour = datetime.datetime.strptime((hour_dict['closing_hour']), '%H:%M')
             location_hours.save()
+
 
     # Tier 2 Create Valid User Data:
     # This Includes Login, User, AdminUser, Student
@@ -100,7 +94,7 @@ def deta_generator():
 
     x = randint(0, len(first_names)-1)
     y = randint(0,len(last_names)-1)
-    '''
+
     for i in range(0,100):
         x = randint(0, len(first_names)-1)
         y = randint(0,len(last_names)-1)
@@ -128,8 +122,6 @@ def deta_generator():
 
     location_set = Location.objects.all()
     student_set = Student.objects.all()
-    print("AAAA")
-    print(len(location_set))
 
     for location in location_set:
         z = randint(0,(len(student_set)-1))
@@ -142,7 +134,7 @@ def deta_generator():
         admin_user.save()
         student.delete()
         student_set = Student.objects.all()
-    '''
+
     diet_type = DietType()
     diet_type.diet_type = "Non Vegetarian"
     diet_type.save()
@@ -160,17 +152,17 @@ def deta_generator():
     diet_type.save()
 
     # Tier 3 Create Food, FoodItemToLocation,MenuCalendar, Review, Feedback
-    for i in range(0,10):
+    for i in range(0,1000):
         try:
             menu = uw_driver.foodservices_products(i)
-            print(menu)
             if len(menu)>0:
                 food = Food()
                 food.product_id = (menu['product_id'])
+                food.cal = menu['calories']
                 food.name = menu['product_name']
                 food.weight = menu['serving_size']
-                food.weight = menu['calories']
                 food.fat = (menu['total_fat_g'])
+                food.fat_percent = menu['total_fat_percent']
                 food.sat_fat =(menu['fat_saturated_g'])
                 food.sat_fat_percent =(menu['fat_saturated_percent'])
                 food.sodium =(menu['sodium_mg'])
