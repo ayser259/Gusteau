@@ -166,7 +166,6 @@ def deta_generator():
                 food.diet_type=DietType.objects.get(diet_type=menu['diet_type'])
                 food.average_rating = randint(0,5)
                 food.save()
-
         except:
             x = 1
             print("Tossed Error 1")
@@ -178,24 +177,19 @@ def deta_generator():
 
     for item in location_set:
         x = randint(2,10)
-        print("1")
         food_list = []
         for i in range(0,x):
-            print("2")
             relation = FoodItemToLocation()
             relation.location = item
             y = randint(0,len(food_set)-1)
             while y in food_list:
-                print("3")
                 y = y+1
                 if y >= len(food_set):
                     y = y/2
             food_list.append(y)
             try:
-                print("4")
                 relation.food = food_set[y]
                 relation.save()
-                print("5")
             except:
                 print("Tossed an Error 2")
 
@@ -215,17 +209,21 @@ def deta_generator():
                     y = y-int(y/2)
             food_list.append(y)
             try:
+                print("Al")
                 calendar.data_available = future_dates_available[y]
+                print("Gore")
+                print(calendar)
+                print(str(calendar))
                 calendar.save()
+
+                print("ASDF")
             except:
                 print("Tossed an error 3")
 
-    print(calendar_set)
-
     lorem = "Lorem ipsum dolor sit amet, probo sanctus ius ad, ei inani latine gubergren eum. Sumo fugit conceptam ad est, partem interpretaris at cum. Eos corpora vituperata ea, qui cu utroque eloquentiam. Cibo porro efficiendi eu nam, te fabellas philosophia qui."
 
-    calendar_set = MenuCalendar.objects.all()
-
+    food_set = Food.objects.all()
+    user_set = User.objects.all()
     for i in range(0,100):
         review = Review()
         y = randint(0,len(past_dates_available)-1)
@@ -233,8 +231,8 @@ def deta_generator():
         review.star_rating = randint(0,5)
         y = randint(0,len(user_set)-1)
         review.user = user_set[y]
-        y = randint(0,len(calendar_set)-1)
-        review.item = calendar_set[y]
+        y = randint(0,len(food_set)-1)
+        review.item = food_set[y]
         review.text = lorem
         review.save()
 
