@@ -138,7 +138,7 @@ class MenuCalendar(models.Model):
 
     menu_calendar_id = models.AutoField(primary_key=True)
     food_item_to_location = models.ForeignKey(FoodItemToLocation,on_delete=models.CASCADE)
-    data_available = models.DateField()
+    date_available = models.DateField()
 
     def __str__(self):
         return str(self.menu_calendar_id)+" "+str(self.food_item_to_location.location.name)+" "+str(self.data_available)
