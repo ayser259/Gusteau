@@ -291,7 +291,6 @@ def get_favorite_location_for_student(request,student_id):
 def get_menu_calendar_for_food(request,food_id):
     try:
         food_item_to_location_set = FoodItemToLocation.objects.filter(food=Food.objects.get(food_id=food_id))
-        print(food_item_to_location_set)
         menu_calendar = MenuCalendar.objects.filter(food_item_to_location__in=food_item_to_location_set)
         serializer = MenuCalendarSerializer(menu_calendar, many=True)
     except MenuCalendar.DoesNotExist:

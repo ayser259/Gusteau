@@ -24,7 +24,7 @@ class Location(models.Model):
     # Food Service Location
 
     location_id = models.AutoField(primary_key=True)
-    building = models.ForeignKey(Building, on_delete=models.CASCADE)
+    building = models.ForeignKey(Building, on_delete=models.CASCADE,null=True)
     name = models.CharField(max_length=255)
 
     def __str__(self):

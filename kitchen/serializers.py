@@ -15,9 +15,11 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class LocationHoursSerializer(serializers.ModelSerializer):
     location = serializers.CharField(source='location.name', read_only=True)
+    location_id = serializers.CharField(source='location.location_id',read_only=True)
+    building = serializers.CharField(source='location.building.name',read_only=True)
     class Meta:
         model = LocationHours
-        fields = ('location','day_of_week', 'opening_hour', 'closing_hour')
+        fields = ('location','day_of_week', 'opening_hour', 'closing_hour','location_id','building')
 
 class LoginSerializer(serializers.ModelSerializer):
 
@@ -56,9 +58,11 @@ class DietTypeSerializer(serializers.ModelSerializer):
 class FoodItemToLocationSerializer(serializers.ModelSerializer):
     food_name = serializers.CharField(source='food.name', read_only=True)
     location = serializers.CharField(source='location.name',read_only=True)
+    location_id = serializers.CharField(source='location.location_id',read_only=True)
+    building = serializers.CharField(source='location.building.name',read_only=True)
     class Meta:
         model = FoodItemToLocation
-        fields = ('food_name','location')
+        fields = ('food_name','location','building','location_id')
 
 class FoodSerializer(serializers.ModelSerializer):
 
