@@ -230,7 +230,7 @@ def deta_generator():
 
     for student in student_set:
         loc_list = []
-        for i in range(0,4):
+        for i in range(0,3):
             fav_location = FavoriteLocation()
             fav_location.student =  student
             y = randint(0,len(location_set)-1)
