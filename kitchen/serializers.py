@@ -11,7 +11,7 @@ class LocationSerializer(serializers.ModelSerializer):
     building = serializers.CharField(source='building.name', read_only=True)
     class Meta:
         model = Location
-        fields = ('name', 'building')
+        fields = ('name', 'building','location_id')
 
 class LocationHoursSerializer(serializers.ModelSerializer):
     location = serializers.CharField(source='location.name', read_only=True)
