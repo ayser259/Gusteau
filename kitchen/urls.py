@@ -23,7 +23,11 @@ urlpatterns = [
         views.get_favorite_location_for_student,
         name='get_favorite_location_for_student'
     ),
-
+    url(
+    r'^api/v1/kitchen/location_hours_for_location/(?P<location_id>[0-9]+)/$',
+        views.get_location_hours_for_location,
+        name='get_location_hours_for_location'
+    ),
     url(
         r'^api/v1/kitchen/submit_review',
         views.submit_review,

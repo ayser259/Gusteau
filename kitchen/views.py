@@ -8,9 +8,7 @@ from .serializers import *
 from django.http import HttpResponse
 from .data_gen import *
 
-
 from django.shortcuts import render
-
 
 def data_gen(request):
     # This view is used to run a script to call the api and save the data
@@ -345,6 +343,25 @@ def get_review_for_user(request,user_id):
     # update details of a single location
     elif request.method == 'PUT':
         return Response({})
+
+@api_view(['GET'])
+def get_location_hours_for_location(request,location_id):
+    try:
+        location_hours_set = LocationHours.objects.filter(location=Location.objects.get(location_id=location_id))
+        serializer = LocationHoursSerializer(location_hours_set, many=True)
+    except LocationHours.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # get details of a single location
+    if request.method == 'GET':
+        return Response(serializer.data)
+    # delete a single location
+    elif request.method == 'DELETE':
+        return Response({})
+    # update details of a single location
+    elif request.method == 'PUT':
+        return Response({})
+
 
 @api_view(['POST'])
 def submit_review(request):
