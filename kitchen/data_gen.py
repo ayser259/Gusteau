@@ -1,14 +1,9 @@
 # coding=utf-8
 from __future__ import unicode_literals
-
 import requests, datetime, json,requests,sys, random,os,django
 from random import randint
-
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gusteau.settings")
-
 from kitchen.models import *
-
 '''
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -16,7 +11,6 @@ from rest_framework import status
 '''
 def deta_generator():
     try:
-
         user_set = User.objects.all()
         building_set = Building.objects.all()
         user_set.delete()
@@ -27,7 +21,6 @@ def deta_generator():
         diets.delete()
         food_set = Food.objects.all()
         food_set.delete()
-
     except:
         q =1
     os.environ['UW_API_KEY'] = '2cdafc74c7a20fcec6c0d766947f4919'
@@ -122,7 +115,6 @@ def deta_generator():
     student_set = Student.objects.all()
 
     for location in location_set:
-        print(len(student_set))
         z = randint(0,(len(student_set)-1))
         student = student_set[z]
         user = student.user
@@ -174,7 +166,7 @@ def deta_generator():
                 food.diet_type=DietType.objects.get(diet_type=menu['diet_type'])
                 food.average_rating = randint(0,5)
                 food.save()
-                print(45)
+
         except:
             x = 1
             print("Tossed Error 1")
