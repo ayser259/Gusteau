@@ -35,7 +35,7 @@ def deta_generator():
     uw_driver.foodservices_diets()
     # plan tier 1: building, locsation, locationHours
     a = uw_driver.foodservices_locations()
-    #'''
+    '''
     for item in a:
         print(item)
         try:
@@ -58,12 +58,11 @@ def deta_generator():
                 new_building.street_name = 'University Avenue West'
                 new_building.postal_code = 'N2L 3G1'
                 new_building.save()
-    #'''
+    '''
 
     for item in a:
         new_location = Location()
         new_location.name = item['outlet_name']
-        print(item['building'])
         if item['building'] == 'None' or item['building'] == None:
             new_location.building = None
         else:
@@ -71,21 +70,27 @@ def deta_generator():
         new_location.save()
 
         times = item['opening_hours']
-        print(times)
         time_keys = list(times.keys())
         for day in time_keys:
             hour_dict = times[day]
             location_hours = LocationHours()
             location_hours.location = new_location
             location_hours.day_of_week = day
+            print(hour_dict)
             try:
                 location_hours.opening_hour = datetime.datetime.strptime(hour_dict['opening_hour'], '%I:%M')
+                print("OPENING HOUR")
             except:
                 location_hours.opening_hour = None
+                print("NO OPENING HOUR")
+            print("OK")
             try:
-                location_hours.closing_hour = datetime.datetime.strptime(hour_dict['closing_hour'], '%I:%M')
+                location_hours.closing_hour = datetime.datetime.strptime(str(hour_dict['closing_hour']), '%I:%M')
+                print(location_hours.closing_hour)
+                print("Closing Hour")
             except:
-                location_hours.closing_hour = None
+                #location_hours.closing_hour = None
+                #print("WTF")
             location_hours.save()
 
     # Tier 2 Create Valid User Data:
@@ -95,7 +100,7 @@ def deta_generator():
 
     x = randint(0, len(first_names)-1)
     y = randint(0,len(last_names)-1)
-    #'''
+    '''
     for i in range(0,100):
         x = randint(0, len(first_names)-1)
         y = randint(0,len(last_names)-1)
@@ -137,7 +142,7 @@ def deta_generator():
         admin_user.save()
         student.delete()
         student_set = Student.objects.all()
-    #'''
+    '''
     diet_type = DietType()
     diet_type.diet_type = "Non Vegetarian"
     diet_type.save()
@@ -155,7 +160,7 @@ def deta_generator():
     diet_type.save()
 
     # Tier 3 Create Food, FoodItemToLocation,MenuCalendar, Review, Feedback
-    for i in range(0,1000):
+    for i in range(0,10):
         try:
             menu = uw_driver.foodservices_products(i)
             print(menu)
